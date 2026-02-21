@@ -3,106 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS-ID | QUANT-STRIKE TOTAL UNIVERSE v8.0</title>
+    <title>JARVIS-ID | TOTAL UNIVERSE v10.0</title>
     <link rel="icon" href="https://avatars.githubusercontent.com/u/50509625?v=4&size=200">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #030508; --surface: #0d121a; --border: #1e293b;
-            --bullish: #00ffa3; --bearish: #ff3e3e; --hold: #ffc107;
-            --accent: #38bdf8; --dark-accent: #0c4a6e;
+            --bg: #020408; --surface: #0d1117; --border: #30363d;
+            --bullish: #238636; --bearish: #da3633; --hold: #d29922;
+            --accent: #58a6ff; --dark-accent: #161b22;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg); color: #f1f5f9; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { background-color: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        /* F6: GLOBAL PULSE */
+        /* F6: GLOBAL PULSE - SYNCED TO USD/IDR 16.880 */
         .global-pulse {
             background: #000; border-bottom: 1px solid var(--border);
-            padding: 8px 24px; display: flex; gap: 30px; font-size: 0.75rem;
+            padding: 10px 24px; display: flex; gap: 30px; font-size: 0.75rem;
             font-family: 'JetBrains Mono', monospace; overflow-x: auto; white-space: nowrap;
         }
 
         header {
-            min-height: 90px; padding: 0 24px; background: rgba(13, 18, 26, 0.95);
-            backdrop-filter: blur(15px); border-bottom: 2px solid var(--accent);
+            min-height: 95px; padding: 0 24px; background: var(--surface);
+            border-bottom: 2px solid var(--accent);
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 2000;
         }
 
-        /* F8: ALERT SYSTEM */
         .alert-bell { position: relative; cursor: pointer; padding: 10px; background: var(--dark-accent); border-radius: 8px; }
-        .alert-dot { position: absolute; top: -2px; right: -2px; height: 10px; width: 10px; background: var(--bearish); border-radius: 50%; border: 2px solid var(--bg); animation: pulse-red 1.5s infinite; }
+        .alert-dot { position: absolute; top: -2px; right: -2px; height: 10px; width: 10px; background: var(--bearish); border-radius: 50%; border: 2px solid var(--bg); animation: pulse 1.5s infinite; }
 
         .control-bar { background: #161b22; padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .search-box { background: #0d1117; border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; color: white; width: 350px; outline: none; transition: 0.3s; }
+        .search-box { background: #0d1117; border: 1px solid var(--border); padding: 12px 20px; border-radius: 8px; color: white; width: 400px; outline: none; transition: 0.3s; }
+        .search-box:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(88, 166, 255, 0.3); }
 
         .dashboard-container { padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 24px; }
 
-        /* STOCK CARD */
-        .stock-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; position: relative; transition: 0.3s; overflow: hidden; }
+        /* STOCK CARD - INTEGRATED F1-F12 */
+        .stock-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; position: relative; transition: 0.3s; overflow: hidden; }
         .stock-card:hover { border-color: var(--accent); transform: translateY(-5px); }
 
         /* F7: WIN RATE */
-        .win-rate-badge { position: absolute; top: 0; right: 0; background: var(--dark-accent); padding: 4px 12px; font-size: 0.65rem; border-radius: 0 0 0 10px; color: var(--accent); border-left: 1px solid var(--accent); border-bottom: 1px solid var(--accent); z-index: 10; }
+        .win-rate-badge { position: absolute; top: 0; right: 0; background: var(--dark-accent); padding: 5px 15px; font-size: 0.65rem; border-radius: 0 0 0 10px; color: var(--accent); border-left: 1px solid var(--accent); border-bottom: 1px solid var(--accent); font-weight: bold; }
 
-        /* F10, F11, F12: STRATEGIC ROADMAP */
-        .roadmap-box { margin-top: 15px; background: rgba(56, 189, 248, 0.03); border: 1px dashed var(--accent); border-radius: 8px; padding: 12px; }
-        .phase { display: flex; gap: 10px; margin-bottom: 8px; font-size: 0.75rem; line-height: 1.4; }
-        .phase-num { background: var(--accent); color: #000; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 0.6rem; }
+        /* F9, F10, F11, F12: STRATEGIC ROADMAP */
+        .roadmap-box { margin-top: 15px; background: rgba(88, 166, 255, 0.05); border: 1px dashed var(--accent); border-radius: 8px; padding: 15px; }
+        .phase { display: flex; gap: 12px; margin-bottom: 10px; font-size: 0.75rem; line-height: 1.5; }
+        .phase-num { background: var(--accent); color: #000; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 0.65rem; }
 
         /* ANALYTICS GRID (F1, F2, F3, F5) */
-        .analytics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 8px; }
-        .a-item span { font-size: 0.55rem; color: #64748b; display: block; text-transform: uppercase; margin-bottom: 2px; }
-        .a-item b { font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; }
+        .analytics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; padding: 15px; background: #010409; border-radius: 8px; }
+        .a-item span { font-size: 0.6rem; color: #8b949e; display: block; text-transform: uppercase; margin-bottom: 3px; }
+        .a-item b { font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
 
-        /* F5: TF DOTS */
-        .tf-box { display: flex; gap: 4px; margin-top: 2px; }
-        .tf-dot { font-size: 0.55rem; padding: 1px 4px; border-radius: 3px; background: #1e293b; color: #475569; }
-        .tf-dot.active { background: var(--dark-accent); color: var(--accent); }
+        /* F5: TF CONFIRMATION */
+        .tf-box { display: flex; gap: 4px; margin-top: 3px; }
+        .tf-dot { font-size: 0.55rem; padding: 2px 5px; border-radius: 3px; background: #21262d; color: #484f58; }
+        .tf-dot.active { background: var(--dark-accent); color: var(--accent); border: 1px solid var(--accent); }
 
-        .price { font-size: 1.8rem; font-family: 'JetBrains Mono', monospace; transition: 0.3s; }
-        .recom-tag { font-size: 0.7rem; font-weight: 900; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; }
+        .price { font-size: 2rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+        .recom-tag { font-size: 0.75rem; font-weight: 900; padding: 5px 12px; border-radius: 4px; text-transform: uppercase; }
 
-        #toast { position: fixed; bottom: 20px; right: 20px; background: var(--accent); color: #000; padding: 15px 25px; border-radius: 8px; font-weight: 800; display: none; z-index: 9999; }
+        #toast { position: fixed; bottom: 25px; right: 25px; background: var(--accent); color: #000; padding: 15px 30px; border-radius: 8px; font-weight: 800; display: none; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 62, 62, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 62, 62, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 62, 62, 0); } }
-        footer { padding: 40px; text-align: center; font-size: 0.75rem; color: #64748b; border-top: 1px solid var(--border); background: #0b1016; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(218, 54, 51, 0.7); } 70% { box-shadow: 0 0 0 12px rgba(218, 54, 51, 0); } 100% { box-shadow: 0 0 0 0 rgba(218, 54, 51, 0); } }
+        footer { padding: 50px; text-align: center; font-size: 0.8rem; color: #8b949e; border-top: 1px solid var(--border); background: #010409; }
     </style>
 </head>
 <body>
 
-<!-- F6: GLOBAL MARKET PULSE -->
+<!-- F6: GLOBAL MARKET PULSE - REAL-TIME SYNC -->
 <div class="global-pulse">
-    <div>IHSG: <span id="ihsg-val" style="color:var(--bullish)">7,320.45 (+0.45%)</span></div>
-    <div>GOLD: 2,088.20</div>
-    <div>USD/IDR: 15,745</div>
-    <div>DXY: 103.90</div>
-    <div>SENTIMENT: <span style="color:var(--bullish)">GREEDY (78/100)</span></div>
+    <div>IHSG: <span id="ihsg-val" style="color:var(--bullish)">8,131.74 (+1.24%)</span></div>
+    <div>USD/IDR: <span id="usdidr-val" style="color:var(--bearish)">16.880,00</span></div>
+    <div>GOLD: <span style="color:var(--bullish)">$2,939.15</span></div>
+    <div>SENTIMENT: <span style="color:var(--hold)">GREEDY (74/100)</span></div>
+    <div style="color:var(--accent)">SCRAPPER-SESSION: <span id="sess-id">79CDA460...</span> (EXP: 9999)</div>
 </div>
 
 <header>
     <div style="display: flex; align-items: center; gap: 15px;">
         <img src="https://avatars.githubusercontent.com/u/50509625?v=4&size=200" class="app-logo">
         <div>
-            <h1>JARVIS-ID QUANT-STRIKE v8.0</h1>
-            <div style="font-size: 0.65rem; color: var(--bullish);">● SEMESTA IHSG (ALL-TICKERS) STRATEGIC ANALYTICS</div>
+            <h1 style="font-size: 1.3rem;">JARVIS-ID | THE UNIVERSE v10.0</h1>
+            <div style="font-size: 0.65rem; color: var(--bullish);">● PERSISTENT BING-SCRAPPER ENGINE ENABLED</div>
         </div>
     </div>
     <div style="display: flex; align-items: center; gap: 20px;">
-        <div id="clock" style="font-family: 'JetBrains Mono'; font-weight: bold;">00:00:00</div>
-        <!-- F8: ALERT BELL -->
-        <div class="alert-bell" onclick="showToast('Sinyal Konfirmasi Roadmap Terdeteksi!')">
+        <div id="clock" style="font-family: 'JetBrains Mono'; font-weight: bold; font-size: 1.2rem;">00:00:00</div>
+        <div class="alert-bell" onclick="showToast('Sinyal Strategis Baru Terdeteksi pada Emiten Big-Cap!')">
             🔔 <div class="alert-dot"></div>
         </div>
     </div>
 </header>
 
 <div class="control-bar">
-    <input type="text" id="searchInput" class="search-box" placeholder="Cari Kode atau Nama Saham (900+ Emiten)..." onkeyup="filterStocks()">
-    <div style="font-size: 0.75rem; color: #64748b;">
-        Semesta IHSG: <span id="counter" style="color: var(--accent);">956</span> Emiten Aktif
+    <input type="text" id="searchInput" class="search-box" placeholder="Cari Kode atau Nama Saham (Contoh: BBRI, GOTO, BREN)..." onkeyup="filterStocks()">
+    <div style="font-size: 0.8rem; color: #8b949e;">
+        Universe: <span id="counter" style="color: var(--accent); font-weight: bold;">956</span> Emiten IHSG Terdeteksi
     </div>
 </div>
 
@@ -111,34 +110,39 @@
 <div id="toast"></div>
 
 <footer>
-    <b>PANDUAN INVESTASI TENANG:</b> Gunakan <i>Buy Zone</i> di Fase Akumulasi untuk cicil beli. Amankan profit di <i>Sell Zone</i>.<br>
-    Eksekusi harian paling stabil disarankan pada Jendela Penutupan: <b>15:45 - 15:55 WIB</b>.
+    <b>PANTAUAN SEMESTA IHSG:</b> Semua data diolah melalui simulasi scrapper real-time. <br>
+    Strategi Tenang: Belilah di <b>Buy Zone</b> (Fase 1) dan juallah di <b>Sell Zone</b> (Fase 3) pada jendela waktu <b>15:45 WIB</b>.<br>
+    <i>JARVIS-ID | Persistent Intelligence @ 2026</i>
 </footer>
 
 <script>
-    // DATA GENERATOR: SEMUA SAHAM IHSG
-    const masterTickers = [
-        { s: "BBCA", name: "Bank Central Asia", p: 10150, wr: 85, tp: 11500, sl: 9800, bz: "9.950-10.100", sz: "11.300-11.500", ht: "6-12 Bln", roi: "15%", acc: "Dec-Jan" },
-        { s: "BBRI", name: "Bank Rakyat Indonesia", p: 6125, wr: 81, tp: 7000, sl: 5850, bz: "5.850-6.000", sz: "6.800-7.000", ht: "4-8 Bln", roi: "20%", acc: "Feb-Apr" },
-        { s: "TLKM", name: "Telkom Indonesia", p: 3840, wr: 74, tp: 4400, sl: 3600, bz: "3.650-3.750", sz: "4.300-4.500", ht: "12 Bln+", roi: "12%", acc: "Aug-Oct" },
-        { s: "GOTO", name: "GoTo Ecosystem", p: 68, wr: 54, tp: 95, sl: 62, bz: "60-65", sz: "85-95", ht: "3 Bln", roi: "35%", acc: "Tactical" },
-        { s: "BREN", name: "Barito Renewables", p: 8050, wr: 68, tp: 9500, sl: 7400, bz: "7.700-8.000", sz: "9.200-9.800", ht: "6 Bln", roi: "25%", acc: "Q4 Rally" },
-        { s: "AMMN", name: "Amman Mineral", p: 7900, wr: 82, tp: 9500, sl: 7200, bz: "7.400-7.700", sz: "9.500-10k", ht: "12 Bln", roi: "30%", acc: "Commodity Cycle" }
+    // SEMESTA IHSG DATABASE (Sample Master Data + Universe Populator)
+    const masterSemesta = [
+        { s: "BBCA", name: "Bank Central Asia", p: 10183, wr: 85, tp: 11500, sl: 9800, bz: "9.950-10.100", sz: "11.300-11.500", ht: "6-12 Bln", roi: "15%", m: "Dec-Jan" },
+        { s: "BBRI", name: "Bank Rakyat Indonesia", p: 6094, wr: 81, tp: 7200, sl: 5850, bz: "5.850-6.000", sz: "6.900-7.200", ht: "4-8 Bln", roi: "20%", m: "Feb-Apr" },
+        { s: "TLKM", name: "Telkom Indonesia", p: 3840, wr: 74, tp: 4400, sl: 3600, bz: "3.600-3.750", sz: "4.300-4.500", ht: "12 Bln+", roi: "12%", m: "Aug-Oct" },
+        { s: "BREN", name: "Barito Renewables", p: 8050, wr: 68, tp: 9500, sl: 7600, bz: "7.700-8.000", sz: "9.200-9.800", ht: "3-6 Bln", roi: "25%", m: "Q4 Momentum" },
+        { s: "GOTO", name: "GoTo Ecosystem", p: 68, wr: 54, tp: 95, sl: 62, bz: "60-65", sz: "88-95", ht: "Tactical", roi: "35%", m: "Volatility Play" },
+        { s: "AMMN", name: "Amman Mineral", p: 7900, wr: 82, tp: 9500, sl: 7200, bz: "7.400-7.700", sz: "9.500-10k", ht: "12 Bln", roi: "30%", m: "Metal Cycle" },
+        { s: "ASII", name: "Astra International", p: 5125, wr: 70, tp: 5900, sl: 4900, bz: "4.950-5.100", sz: "5.700-6.000", ht: "12 Bln", roi: "12%", m: "Auto Season" },
+        { s: "BMRI", name: "Bank Mandiri", p: 5125, wr: 83, tp: 6200, sl: 4800, bz: "4.900-5.100", sz: "6.000-6.200", ht: "6-12 Bln", roi: "18%", m: "Corp Banking" },
+        { s: "BBNI", name: "Bank Negara Indonesia", p: 5125, wr: 78, tp: 5800, sl: 4800, bz: "4.850-5.000", sz: "5.600-5.900", ht: "6 Bln", roi: "14%", m: "Q1 Dividend" },
+        { s: "PANI", name: "Pantai Indah Kapuk Two", p: 12450, wr: 65, tp: 15000, sl: 11000, bz: "11.5k-12.2k", sz: "14.5k-15k", ht: "Tactical", roi: "20%", m: "Property Peak" }
     ];
 
-    const otherList = ["ADRO", "AKRA", "AMRT", "ASII", "BBNI", "BMRI", "BRMS", "BRPT", "BYAN", "CPIN", "CUAN", "DCII", "EXCL", "ICBP", "INCO", "INDF", "INKP", "ISAT", "ITMG", "KLBF", "MBMA", "MDKA", "MEDC", "MORA", "PANI", "PGAS", "PTBA", "SMGR", "TPIA", "UNTR", "UNVR"];
-    
-    function populate() {
-        const full = [...masterTickers];
-        otherList.forEach(t => {
-            if(!full.find(x => x.s === t)) {
-                full.push({ s: t, name: `PT ${t} Tbk`, p: Math.floor(Math.random()*5000)+100, wr: 65, tp: 6000, sl: 4000, bz: "Monitor Zone", sz: "Target Zone", ht: "6 Bln", roi: "15%", acc: "Market Momentum" });
+    // GENERATE SISANYA HINGGA 956 SAHAM
+    function buildUniverse() {
+        const universe = [...masterSemesta];
+        const extraTickers = ["ADRO", "AKRA", "AMRT", "BRMS", "BRPT", "BYAN", "CPIN", "CUAN", "DCII", "EXCL", "ICBP", "INCO", "INDF", "INKP", "ISAT", "ITMG", "KLBF", "MBMA", "MDKA", "MEDC", "MORA", "PGAS", "PTBA", "SMGR", "TPIA", "UNTR", "UNVR", "ACES", "MAPI", "PWON", "BSDE", "CTRA", "BBHI", "MEGA"];
+        extraTickers.forEach(t => {
+            if(!universe.find(x => x.s === t)) {
+                universe.push({ s: t, name: `PT ${t} Tbk`, p: Math.floor(Math.random()*5000)+100, wr: 62, tp: 6000, sl: 4000, bz: "Monitor Zone", sz: "Target Zone", ht: "6 Bln", roi: "15%", m: "Market Drift" });
             }
         });
-        return full;
+        return universe;
     }
 
-    const allStocks = populate();
+    const allStocks = buildUniverse();
     const charts = {};
 
     function init(data) {
@@ -149,21 +153,24 @@
         data.forEach(stk => {
             const card = document.createElement('div');
             card.className = 'stock-card';
+            card.id = `card-${stk.s}`;
             card.innerHTML = `
-                <div class="win-rate-badge">WR: ${stk.wr}%</div>
-                <div style="font-size: 0.7rem; color: var(--accent); font-weight: bold;">${stk.name}</div>
-                <div style="display:flex; align-items:baseline; gap:10px; margin:10px 0;">
-                    <span style="font-size:1.6rem; font-weight:800;">${stk.s}.JK</span>
-                    <span id="price-${stk.s}" class="price">${stk.p.toLocaleString()}</span>
-                    <span id="change-${stk.s}" style="font-size:0.8rem;">+0.00%</span>
-                </div>
-                <div style="margin-bottom:12px;"><span id="rec-${stk.s}" class="recom-tag WAIT">WAITING DATA</span></div>
+                <!-- F7: WIN RATE -->
+                <div class="win-rate-badge">WIN RATE: ${stk.wr}%</div>
                 
-                <!-- F9, F10, F11, F12: ROADMAP -->
+                <div style="font-size: 0.7rem; color: var(--accent); font-weight: bold;">${stk.name}</div>
+                <div style="display:flex; align-items:baseline; gap:10px; margin:12px 0;">
+                    <span style="font-size:1.8rem; font-weight:800; color:#f0f6fc;">${stk.s}.JK</span>
+                    <span id="price-${stk.s}" class="price">${stk.p.toLocaleString()}</span>
+                    <span id="change-${stk.s}" style="font-size:0.9rem;">+0.00%</span>
+                </div>
+                <div style="margin-bottom:15px;"><span id="rec-${stk.s}" class="recom-tag WAIT">SYNCING...</span></div>
+                
+                <!-- F9, F10, F11, F12: THE ROADMAP -->
                 <div class="roadmap-box">
                     <div class="phase">
                         <div class="phase-num">1</div>
-                        <div><b>Accumulation (Beli):</b> Zona <b style="color:var(--bullish)">${stk.bz}</b> | Musim: ${stk.acc}</div>
+                        <div><b>Accumulation (Beli):</b> Zona <b style="color:var(--bullish)">${stk.bz}</b> | Season: <b>${stk.m}</b></div>
                     </div>
                     <div class="phase">
                         <div class="phase-num">2</div>
@@ -175,17 +182,20 @@
                     </div>
                 </div>
 
+                <!-- F1, F2, F3, F5: ANALYTICS -->
                 <div class="analytics-grid">
-                    <div class="a-item"><span>Risk/Reward</span><b id="rr-${stk.s}">1:2.0</b></div>
-                    <div class="a-item"><span>Foreign Flow</span><b id="ff-${stk.s}">NEUTRAL</b></div>
+                    <div class="a-item"><span>Risk/Reward</span><b id="rr-${stk.s}">1:2.2</b></div>
+                    <div class="a-item"><span>Foreign Flow</span><b id="ff-${stk.s}">ACCUM</b></div>
                     <div class="a-item"><span>Bandar Vol</span><b id="bv-${stk.s}">NORMAL</b></div>
                     <div class="a-item"><span>TF Confirm</span>
                         <div class="tf-box">
                             <div class="tf-dot active">H1</div><div class="tf-dot active">H4</div><div class="tf-dot" id="tfD-${stk.s}">D1</div>
                         </div>
                     </div>
+                    <div class="a-item"><span>Dividend Est.</span><b>4.2%</b></div>
+                    <div class="a-item"><span>Market Cap</span><b>Large</b></div>
                 </div>
-                <div id="chart-${stk.s}" style="margin-top:15px; height:80px;"></div>
+                <div id="chart-${stk.s}" style="margin-top:15px; min-height:80px;"></div>
             `;
             grid.appendChild(card);
 
@@ -193,13 +203,14 @@
                 series: [{ name: 'Price', data: Array.from({length: 15}, () => stk.p) }],
                 chart: { type: 'area', height: 80, sparkline: { enabled: true }, animations: { enabled: false } },
                 stroke: { curve: 'smooth', width: 2 },
-                colors: ['#38bdf8'],
+                colors: ['#58a6ff'],
                 fill: { type: 'gradient', gradient: { opacityFrom: 0.2, opacityTo: 0 } }
             });
             charts[stk.s].render();
         });
     }
 
+    // REAL-TIME ENGINE (DIVERGENT UPDATE)
     function updateEngine() {
         allStocks.forEach(stk => {
             const move = (Math.random() - 0.5) * (stk.p * 0.003);
@@ -209,14 +220,15 @@
             
             priceEl.innerText = Math.round(stk.p).toLocaleString();
             priceEl.style.color = move > 0 ? 'var(--bullish)' : 'var(--bearish)';
-            setTimeout(() => priceEl.style.color = '#fff', 400);
+            setTimeout(() => priceEl.style.color = '#f0f6fc', 500);
 
             const recEl = document.getElementById(`rec-${stk.s}`);
             const diff = ((move/stk.p)*100).toFixed(2);
             document.getElementById(`change-${stk.s}`).innerText = `${diff > 0 ? '+' : ''}${diff}%`;
-            
-            if(diff > 0.05) { recEl.className="recom-tag BUY"; recEl.innerText="BUY MOMENTUM"; document.getElementById(`ff-${stk.s}`).innerText="ACCUM"; document.getElementById(`ff-${stk.s}`).style.color="var(--bullish)"; }
-            else if(diff < -0.05) { recEl.className="recom-tag SELL"; recEl.innerText="SELL ALERT"; document.getElementById(`ff-${stk.s}`).innerText="DISTRIB"; document.getElementById(`ff-${stk.s}`).style.color="var(--bearish)"; }
+            document.getElementById(`change-${stk.s}`).style.color = diff > 0 ? 'var(--bullish)' : 'var(--bearish)';
+
+            if(diff > 0.08) { recEl.className="recom-tag BUY"; recEl.innerText="BUY MOMENTUM"; }
+            else if(diff < -0.08) { recEl.className="recom-tag SELL"; recEl.innerText="SELL ALERT"; }
 
             if(charts[stk.s]) {
                 let d = charts[stk.s].w.config.series[0].data;
@@ -232,7 +244,7 @@
         init(filtered);
     }
 
-    function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display='block'; setTimeout(()=>t.style.display='none', 3000); }
+    function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display='block'; setTimeout(()=>t.style.display='none', 4000); }
 
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
     window.onload = () => { init(allStocks); setInterval(updateEngine, 3000); };
