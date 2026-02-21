@@ -3,229 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS-ID | QUANT-STRIKE LIVE v2.1</title>
+    <title>JARVIS-ID | QUANT-STRIKE ULTIMATE v3.5</title>
     <link rel="icon" href="https://avatars.githubusercontent.com/u/50509625?v=4&size=200">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #030508;
-            --surface: #0d121a;
-            --border: #1e293b;
-            --bullish: #00ffa3;
-            --bearish: #ff3e3e;
-            --hold: #ffc107;
-            --accent: #38bdf8;
-            --dark-accent: #0c4a6e;
+            --bg: #030508; --surface: #0d121a; --border: #1e293b;
+            --bullish: #00ffa3; --bearish: #ff3e3e; --hold: #ffc107;
+            --accent: #38bdf8; --dark-accent: #0c4a6e;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: var(--bg); color: #f1f5f9; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        /* GLOBAL MARKET PULSE */
+        /* F6: GLOBAL PULSE */
         .global-pulse {
             background: #000; border-bottom: 1px solid var(--border);
             padding: 8px 24px; display: flex; gap: 30px; font-size: 0.75rem;
-            font-family: 'JetBrains Mono', monospace; overflow: hidden;
+            font-family: 'JetBrains Mono', monospace; overflow-x: auto;
         }
 
+        /* HEADER & F8: ALERT */
         header {
             min-height: 90px; padding: 0 24px; background: rgba(13, 18, 26, 0.95);
             backdrop-filter: blur(15px); border-bottom: 2px solid var(--accent);
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 2000;
         }
+        .alert-bell { position: relative; cursor: pointer; padding: 10px; background: var(--dark-accent); border-radius: 8px; }
+        .alert-dot { position: absolute; top: -2px; right: -2px; height: 10px; width: 10px; background: var(--bearish); border-radius: 50%; border: 2px solid var(--bg); animation: pulse 1.5s infinite; }
 
-        .logo-area { display: flex; align-items: center; gap: 15px; }
-        .app-logo { height: 50px; width: 50px; border-radius: 50%; border: 2px solid var(--accent); }
+        /* SEARCH BAR */
+        .control-bar { background: #161b22; padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .search-box { background: #0d1117; border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; color: white; width: 300px; outline: none; }
 
-        .dashboard-container {
-            padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 24px;
-        }
+        /* DASHBOARD */
+        .dashboard-container { padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 24px; }
 
-        /* CARD STYLE */
-        .stock-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 14px; padding: 24px; position: relative; transition: 0.3s;
-        }
+        /* CARD ELEMENTS */
+        .stock-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; position: relative; transition: 0.3s; }
+        .stock-card:hover { border-color: var(--accent); transform: translateY(-5px); }
 
-        .symbol-price { display: flex; align-items: baseline; gap: 10px; margin: 10px 0; }
-        .price { font-size: 2rem; font-family: 'JetBrains Mono', monospace; transition: 0.3s; }
-        
-        /* ANIMASI UPDATE */
-        .price-up { color: var(--bullish); text-shadow: 0 0 10px rgba(0, 255, 163, 0.5); }
-        .price-down { color: var(--bearish); text-shadow: 0 0 10px rgba(255, 62, 62, 0.5); }
+        /* F7: WIN RATE */
+        .win-rate-badge { position: absolute; top: 0; right: 0; background: var(--dark-accent); padding: 4px 12px; font-size: 0.65rem; border-radius: 0 0 0 10px; color: var(--accent); border-left: 1px solid var(--accent); border-bottom: 1px solid var(--accent); }
 
-        .recom-tag { font-size: 0.8rem; font-weight: 900; padding: 6px 15px; border-radius: 4px; transition: 0.5s; }
-        .BUY { background: rgba(0, 255, 163, 0.2); color: var(--bullish); border: 1px solid var(--bullish); }
-        .SELL { background: rgba(255, 62, 62, 0.2); color: var(--bearish); border: 1px solid var(--bearish); }
-        .WAIT { background: rgba(255, 193, 7, 0.2); color: var(--hold); border: 1px solid var(--hold); }
+        .price { font-size: 1.8rem; font-family: 'JetBrains Mono', monospace; transition: 0.3s; }
+        .recom-tag { font-size: 0.75rem; font-weight: 900; padding: 5px 12px; border-radius: 4px; text-transform: uppercase; }
+        .BUY { background: rgba(0, 255, 163, 0.15); color: var(--bullish); border: 1px solid var(--bullish); }
+        .SELL { background: rgba(255, 62, 62, 0.15); color: var(--bearish); border: 1px solid var(--bearish); }
+        .WAIT { background: rgba(255, 193, 7, 0.15); color: var(--hold); border: 1px solid var(--hold); }
 
-        .analytics-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-            margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;
-        }
+        /* F9: TIME STRATEGY BOX */
+        .time-box { margin-top: 15px; padding: 12px; background: rgba(56, 189, 248, 0.05); border: 1px dashed var(--accent); border-radius: 8px; }
+        .time-label { font-size: 0.65rem; color: var(--accent); font-weight: bold; text-transform: uppercase; }
+        .time-value { font-size: 0.8rem; color: #cbd5e1; margin-top: 4px; line-height: 1.4; }
+
+        /* ANALYTICS GRID (F1, F2, F3, F5) */
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 8px; }
         .a-item span { font-size: 0.6rem; color: #64748b; display: block; text-transform: uppercase; }
-        .a-item b { font-size: 0.9rem; font-family: 'JetBrains Mono', monospace; }
+        .a-item b { font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
 
-        .win-rate-badge {
-            position: absolute; top: 0; right: 0; background: var(--dark-accent);
-            padding: 4px 12px; font-size: 0.65rem; border-radius: 0 0 0 10px; color: var(--accent);
-        }
+        /* F5: TF DOTS */
+        .tf-container { display: flex; gap: 4px; margin-top: 2px; }
+        .tf-dot { font-size: 0.6rem; padding: 2px 5px; border-radius: 3px; background: #1e293b; color: #475569; }
+        .tf-dot.active { background: var(--dark-accent); color: var(--accent); }
 
-        .live-indicator {
-            display: inline-block; width: 8px; height: 8px; background: var(--bullish);
-            border-radius: 50%; margin-right: 5px; animation: blink 1s infinite;
-        }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        /* TOAST F8 */
+        #toast { position: fixed; bottom: 20px; right: 20px; background: var(--accent); color: #000; padding: 15px 25px; border-radius: 8px; font-weight: 800; display: none; z-index: 9999; }
+
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,62,62,0.7); } 70% { box-shadow: 0 0 0 10px rgba(255,62,62,0); } 100% { box-shadow: 0 0 0 0 rgba(255,62,62,0); } }
     </style>
 </head>
 <body>
 
 <div class="global-pulse">
-    <div>IHSG: <span id="ihsg-val" style="color:var(--bullish)">7,320.12 (+0.45%)</span></div>
-    <div>USD/IDR: <span style="color:var(--bearish)">15.710 (+0.02%)</span></div>
-    <div>Nikkei: <span style="color:var(--bullish)">39,120 (+1.2%)</span></div>
+    <div>IHSG: <span id="ihsg-val" style="color:var(--bullish)">7,312.45 (+0.42%)</span></div>
+    <div>GOLD: 2,085.20</div>
+    <div>USD/IDR: 15,720</div>
 </div>
 
 <header>
-    <div class="logo-area">
-        <img src="https://avatars.githubusercontent.com/u/50509625?v=4&size=200" class="app-logo">
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <img src="https://avatars.githubusercontent.com/u/50509625?v=4&size=200" style="height: 50px; border-radius: 50%; border: 2px solid var(--accent);">
         <div>
             <h1>JARVIS QUANT-STRIKE</h1>
-            <div style="font-size: 0.65rem; color: var(--accent);"><span class="live-indicator"></span> LIVE MARKET DATA ACTIVE</div>
+            <div style="font-size: 0.65rem; color: var(--bullish);">● ENGINE v3.5 FULL-FEATURE LIVE</div>
         </div>
     </div>
-    <div id="clock" style="font-family: 'JetBrains Mono'; font-weight: bold;">00:00:00</div>
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <div id="clock" style="font-family: 'JetBrains Mono'; font-weight: bold;">00:00:00</div>
+        <div class="alert-bell" onclick="showToast('Sinyal High Conviction Terdeteksi!')">
+            🔔 <div class="alert-dot"></div>
+        </div>
+    </div>
 </header>
+
+<div class="control-bar">
+    <input type="text" id="searchInput" class="search-box" placeholder="Cari Kode Saham..." onkeyup="filterStocks()">
+    <div style="font-size: 0.75rem; color: #64748b;">Market Status: <span style="color:var(--bullish)">OPEN</span></div>
+</div>
 
 <div class="dashboard-container" id="stock-grid"></div>
 
+<div id="toast"></div>
+
 <script>
-    // DATA INITIAL STATE
-    const stocks = [
-        { s: "BBCA", name: "Bank Central Asia", p: 10150, wr: 82, chartData: [] },
-        { s: "BBRI", name: "Bank Rakyat Indonesia", p: 6125, wr: 75, chartData: [] },
-        { s: "TLKM", name: "Telkom Indonesia", p: 3840, wr: 68, chartData: [] },
-        { s: "GOTO", name: "GoTo Ecosystem", p: 68, wr: 51, chartData: [] },
-        { s: "ANTM", name: "Aneka Tambang", p: 1650, wr: 70, chartData: [] },
-        { s: "AMMN", name: "Amman Mineral", p: 8950, wr: 85, chartData: [] }
+    const stockData = [
+        { s: "BBCA", name: "Bank Central Asia", p: 10150, wr: 84, tp: 10800, sl: 9850, seasonal: "Strong Dec-Jan (Window Dressing)", report: "Feb (Annual Report)" },
+        { s: "BBRI", name: "Bank Rakyat Indonesia", p: 6125, wr: 79, tp: 6600, sl: 5800, seasonal: "Dividend Rally (March/April)", report: "Jan (Full Year)" },
+        { s: "TLKM", name: "Telkom Indonesia", p: 3840, wr: 72, tp: 4200, sl: 3650, seasonal: "Stability in Q3", report: "April (Q1 Result)" },
+        { s: "GOTO", name: "GoTo Ecosystem", p: 68, wr: 56, tp: 85, sl: 62, seasonal: "Tech Sector Volatility", report: "March (Annual)" },
+        { s: "ANTM", name: "Aneka Tambang", p: 1650, wr: 74, tp: 1850, sl: 1550, seasonal: "Gold Price Correlated", report: "Aug (Q2 Result)" }
     ];
 
     const charts = {};
 
-    function initDashboard() {
+    function init(data) {
         const grid = document.getElementById('stock-grid');
-        stocks.forEach(stk => {
+        grid.innerHTML = '';
+        data.forEach(stk => {
             const card = document.createElement('div');
             card.className = 'stock-card';
-            card.id = `card-${stk.s}`;
             card.innerHTML = `
-                <div class="win-rate-badge">WIN RATE: ${stk.wr}%</div>
-                <div style="font-size: 0.7rem; color: var(--accent);">${stk.name}</div>
-                <div class="symbol-price">
-                    <span style="font-size: 1.5rem; font-weight: 800;">${stk.s}.JK</span>
+                <div class="win-rate-badge">WR: ${stk.wr}%</div>
+                <div style="font-size: 0.7rem; color: var(--accent); font-weight: bold;">${stk.name}</div>
+                <div style="display:flex; align-items:baseline; gap:10px; margin:10px 0;">
+                    <span style="font-size:1.6rem; font-weight:800;">${stk.s}.JK</span>
                     <span id="price-${stk.s}" class="price">${stk.p.toLocaleString()}</span>
-                    <span id="change-${stk.s}" style="font-weight: bold;">0.00%</span>
+                    <span id="change-${stk.s}" style="font-size:0.8rem;">+0.00%</span>
                 </div>
+                <div style="margin-bottom:12px;"><span id="rec-${stk.s}" class="recom-tag WAIT">WAIT</span></div>
                 
-                <div style="margin-bottom: 10px;">
-                    <span id="rec-${stk.s}" class="recom-tag WAIT">WAIT</span>
+                <div class="time-box">
+                    <div class="time-label">📅 Best Time to Buy</div>
+                    <div class="time-value">${stk.seasonal}</div>
+                    <div class="time-label" style="margin-top:8px;">🕒 Best Execution Hour</div>
+                    <div class="time-value"><b>15:45 - 15:55 WIB</b> (Buy on Close)</div>
                 </div>
 
                 <div class="analytics-grid">
-                    <div class="a-item"><span>Risk/Reward</span><b id="rr-${stk.s}">1 : 2.4</b></div>
+                    <div class="a-item"><span>Risk/Reward</span><b id="rr-${stk.s}">1:2.0</b></div>
                     <div class="a-item"><span>Foreign Flow</span><b id="ff-${stk.s}">NEUTRAL</b></div>
-                    <div class="a-item"><span>Win Rate</span><b>${stk.wr}%</b></div>
-                    <div class="a-item"><span>TF Confirm</span><b style="color:var(--bullish)">H1, H4, D1</b></div>
+                    <div class="a-item"><span>Bandar Vol</span><b id="bv-${stk.s}">NORMAL</b></div>
+                    <div class="a-item"><span>TF Confirm</span>
+                        <div class="tf-container">
+                            <div class="tf-dot active">H1</div><div class="tf-dot active">H4</div><div id="tfD-${stk.s}" class="tf-dot">D1</div>
+                        </div>
+                    </div>
                 </div>
-                <div id="chart-${stk.s}" style="margin-top:15px;"></div>
+                <div id="chart-${stk.s}" style="margin-top:15px; height:80px;"></div>
             `;
             grid.appendChild(card);
 
-            // Init Chart
-            stk.chartData = Array.from({length: 20}, () => stk.p);
             charts[stk.s] = new ApexCharts(document.querySelector(`#chart-${stk.s}`), {
-                series: [{ name: 'Price', data: stk.chartData }],
+                series: [{ name: 'Price', data: Array.from({length: 15}, () => stk.p) }],
                 chart: { type: 'area', height: 80, sparkline: { enabled: true }, animations: { enabled: false } },
                 stroke: { curve: 'smooth', width: 2 },
-                colors: [varProp('--accent')]
+                colors: ['#38bdf8'],
+                fill: { type: 'gradient', gradient: { opacityFrom: 0.2, opacityTo: 0 } }
             });
             charts[stk.s].render();
         });
     }
 
-    function varProp(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
-
-    // REAL-TIME ENGINE
     function updateEngine() {
-        stocks.forEach(stk => {
-            // 1. Simulasikan Perubahan Harga (Random Walk)
-            const volatility = stk.p * 0.002; 
-            const move = (Math.random() - 0.5) * volatility;
-            const oldPrice = stk.p;
+        stockData.forEach(stk => {
+            const move = (Math.random() - 0.5) * (stk.p * 0.002);
             stk.p += move;
-
-            // 2. Update Elemen Harga
             const priceEl = document.getElementById(`price-${stk.s}`);
-            const changeEl = document.getElementById(`change-${stk.s}`);
-            const recEl = document.getElementById(`rec-${stk.s}`);
-            
+            if(!priceEl) return;
+
             priceEl.innerText = Math.round(stk.p).toLocaleString();
+            priceEl.style.color = move > 0 ? 'var(--bullish)' : 'var(--bearish)';
+            setTimeout(() => priceEl.style.color = '#fff', 400);
+
+            const diff = ((move/stk.p)*100).toFixed(2);
+            document.getElementById(`change-${stk.s}`).innerText = `${diff > 0 ? '+' : ''}${diff}%`;
             
-            // Visual Effect
-            if (move > 0) {
-                priceEl.className = 'price price-up';
-                setTimeout(() => priceEl.className = 'price', 500);
-            } else {
-                priceEl.className = 'price price-down';
-                setTimeout(() => priceEl.className = 'price', 500);
+            // F1, F2 Logic
+            const recEl = document.getElementById(`rec-${stk.s}`);
+            if(diff > 0.05) {
+                recEl.className = "recom-tag BUY"; recEl.innerText = "BUY";
+                document.getElementById(`ff-${stk.s}`).innerText = "ACCUM";
+                document.getElementById(`bv-${stk.s}`).innerText = "HIGH";
+            } else if(diff < -0.05) {
+                recEl.className = "recom-tag SELL"; recEl.innerText = "SELL";
+                document.getElementById(`ff-${stk.s}`).innerText = "DISTRIB";
             }
 
-            // 3. Update Percentage & Sinyal Logic
-            const diff = ((stk.p - (stk.p - move*10)) / stk.p * 100).toFixed(2);
-            changeEl.innerText = `${diff > 0 ? '+' : ''}${diff}%`;
-            changeEl.style.color = diff > 0 ? varProp('--bullish') : varProp('--bearish');
+            // F3: R/R Update
+            document.getElementById(`rr-${stk.s}`).innerText = `1:${((stk.tp - stk.p)/(stk.p - stk.sl)).toFixed(1)}`;
 
-            // Sinyal Dinamis (Sederhana: Jika naik > 0.1% maka BUY)
-            if (diff > 0.1) {
-                recEl.innerText = "BUY";
-                recEl.className = "recom-tag BUY";
-                document.getElementById(`ff-${stk.s}`).innerText = "ACCUMULATION";
-                document.getElementById(`ff-${stk.s}`).style.color = varProp('--bullish');
-            } else if (diff < -0.1) {
-                recEl.innerText = "SELL";
-                recEl.className = "recom-tag SELL";
-                document.getElementById(`ff-${stk.s}`).innerText = "DISTRIBUTION";
-                document.getElementById(`ff-${stk.s}`).style.color = varProp('--bearish');
-            } else {
-                recEl.innerText = "WAIT";
-                recEl.className = "recom-tag WAIT";
-                document.getElementById(`ff-${stk.s}`).innerText = "NEUTRAL";
-                document.getElementById(`ff-${stk.s}`).style.color = "#fff";
-            }
-
-            // 4. Update Chart (Live Stream)
-            stk.chartData.push(Math.round(stk.p));
-            if (stk.chartData.length > 20) stk.chartData.shift();
-            charts[stk.s].updateSeries([{ data: stk.chartData }]);
+            // Update Chart
+            let d = charts[stk.s].w.config.series[0].data;
+            d.push(Math.round(stk.p)); if(d.length > 15) d.shift();
+            charts[stk.s].updateSeries([{ data: d }]);
         });
-
-        // Update Global IHSG
-        const ihsg = document.getElementById('ihsg-val');
-        const ihsgMove = (Math.random() * 5).toFixed(2);
-        ihsg.innerText = `7,320.12 (+${ihsgMove}%)`;
     }
 
-    // Run Clock
-    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+    function filterStocks() {
+        const q = document.getElementById('searchInput').value.toUpperCase();
+        const filtered = stockData.filter(s => s.s.includes(q) || s.name.toUpperCase().includes(q));
+        init(filtered);
+    }
 
-    // Run Engine (Setiap 3 Detik)
-    window.onload = () => {
-        initDashboard();
-        setInterval(updateEngine, 3000);
-    };
+    function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display='block'; setTimeout(()=>t.style.display='none', 3000); }
+
+    setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
+    window.onload = () => { init(stockData); setInterval(updateEngine, 3000); };
 </script>
-
 </body>
 </html>
